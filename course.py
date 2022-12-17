@@ -24,17 +24,28 @@ TOPICS = {
 
 class Course():
     
-    def __init__(self, name, rating):
+    def __init__(self, name, rating, learning_rate):
         self.name = name
         self.rating = rating
-        self.familiarity = self.check_understanding()
-        
+        self.learning_rate = learning_rate
+        self.adjust_learning_rate()
+        self.score = 0
+        #self.familiarity = self.check_understanding()
+    
+    def adjust_learning_rate(self):
+        #Only existing confusion reduces learning rate
+        if self.rating < 0.4:
+            self.learning_rate *= 0.95
+            
     def check_understanding(self):
-        print("Enter yes or no if you understand the following " + self.name + " topics...")
+        print("Enter yes/no if you understand the following " + self.name + " topics...")
         count = 0
         for topic in TOPICS[self.name]:
-            familiar = input(topic + ": ")
+            familiar = input(topic.capitalize() + ": ")
+            while not (familiar == "yes" or familiar == "no"):
+                familiar = input("Please answer again (yes/no): ")
             if familiar == "yes":
                 count += 1
-        
-        return round(count / len(TOPICS[self.name]), 2)
+        self.score = round(count / len(TOPICS[self.name]), 2)
+        print("Topic understanding score:", self.score)
+        return self.score
