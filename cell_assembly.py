@@ -39,7 +39,6 @@ def main():
 def get_courses_to_learn(courses):
     need_to_learn = []
     for course in courses:
-        #score = Course.check_understanding(course.name)
         score = course.check_understanding()
         #does not meet threshold to learn next topic
         if score < EXPERT_THRESHOLD:

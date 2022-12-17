@@ -30,7 +30,6 @@ class Course():
         self.learning_rate = learning_rate
         self.adjust_learning_rate()
         self.score = 0
-        #self.familiarity = self.check_understanding()
     
     def adjust_learning_rate(self):
         #Only existing confusion reduces learning rate
