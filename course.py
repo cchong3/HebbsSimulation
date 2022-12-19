@@ -1,3 +1,14 @@
+"""
+Authors: Crystal Chong & Emilie Grand'Pierre
+Course: CSCI 3400 / DCS 3400
+Assignment: FInal Project 
+Date: December 19, 2022 
+
+Description:
+The courses class stores the key attributes of each facet of math 
+used in building our cell assembly. 
+"""
+
 TOPICS = {
     "Algebra1": [
         "linear equations", "graphs", "inequalities", "functions", 
