@@ -1,6 +1,7 @@
 # HebbsSimulation
 
-Crystal Chong & Emilie Grand'Pierre
+## Crystal Chong & Emilie Grand'Pierre
+
 Cogntivie Architecture, CSCI 3400 / DCS 3400
 
 ### Background 
