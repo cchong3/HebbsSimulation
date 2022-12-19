@@ -1,5 +1,8 @@
 # HebbsSimulation
 
+Crystal Chong & Emilie Grand'Pierre
+Cogntivie Architecture, CSCI 3400 / DCS 3400
+
 ### Background 
 
 As computer science majors, the difference between human learning and computer learning is one of the biggest takeaways from this course. Throughout our many semesters of AI courses, the ideas of optimization, balancing greediness and randomness, and Bayesian reasoning contrast the core ways we, as humans, learn. Our unit of thought, the cell assembly, is a product of our perception and enables us to make predictions even when things are uncertain. Individual pieces of knowledge and experience come together to build a prototype that can be called on when needed. Thus, for humans learning is the building and changing of our internal structures using recruitment and fractionation to fine-tune our cell assembly. At the heart of learning is Hebb’s rule which is the idea of wiring neurons that fire together. Another cornerstone of building cell assemblies is the compensatory learning model: in a cell-assembly, connections that have never proven to be useful are weakened. When paired together, over time as connections strengthen within a given cell assembly, we can perform closure and pull up the best ‘match’ for an object or abstract idea based on experience. 
