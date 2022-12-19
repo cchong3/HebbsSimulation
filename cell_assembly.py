@@ -1,3 +1,17 @@
+"""
+Authors: Crystal Chong & Emilie Grand'Pierre
+Course: CSCI 3400 / DCS 3400
+Assignment: FInal Project 
+Date: December 19, 2022 
+
+Description:
+The cell_assembly file is the main method in a system that models a humans
+cognitive architecture. Using one’s environment, prior knowledge, and alloted time,
+this system builds and outputs a grpah that models the learning process.
+
+Bugs: There are no known bugs within our code
+"""
+
 from course import Course
 from course import TOPICS
 import networkx as nx
