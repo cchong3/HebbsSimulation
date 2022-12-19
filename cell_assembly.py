@@ -1,7 +1,7 @@
 """
 Authors: Crystal Chong & Emilie Grand'Pierre
-Course: CSCI 3400 / DCS 3400
-Assignment: FInal Project 
+Course: CSCI/DCS3400
+Assignment: Final Project 
 Date: December 19, 2022 
 
 Description:
