@@ -1,22 +1,22 @@
 TOPICS = {
-    "algebra1": [
+    "Algebra1": [
         "linear equations", "graphs", "inequalities", "functions", 
         "sequences", "exponents", "quadratics", "irrational numbers"
     ],
-    "geometry": [
+    "Geometry": [
         "lines", "angles", "shapes", "planes", "area/perimeter",
         "volume/surface area", "pythagorean theorum", "congruence",
         "circles"
     ],
-    "algebra2": [
+    "Algebra2": [
         "polynomials", "complex numbers", "rational exponenents", "exponential models",
         "logarithms", "system of equations", "trigonometry"
     ],
-    "precalculus": [
+    "Precalculus": [
         "inverse functions", "rational functions", "conics", "vectors", "matrices",
         "probability", "limits", "continuity"
     ],
-    "calculus": [
+    "Calculus": [
         "derivatives", "chain rule", "Lhopital's rule", "analyzing functions", 
         "integrals", "differential equations"
     ]
@@ -25,11 +25,10 @@ TOPICS = {
 class Course():
     
     def __init__(self, name, rating, learning_rate):
-        self.name = name.capitalize()
+        self.name = name
         self.rating = rating/10
         self.learning_rate = learning_rate
         self.adjust_learning_rate()
-        print(self.learning_rate)
         self.score = 0
     
     def adjust_learning_rate(self):
@@ -38,10 +37,10 @@ class Course():
             self.learning_rate = round(self.learning_rate * 0.95, 3)
             
     def check_understanding(self):
-        print("Enter yes/no if you understand the following topics...")
+        print("Enter yes/no if you understand the following " + self.name + " topics...")
         count = 0
         for topic in TOPICS[self.name]:
-            familiar = input(topic.capitalize() + ": ")
+            familiar = input(topic + ": ")
             while not (familiar == "yes" or familiar == "no"):
                 familiar = input("Please answer again (yes/no): ")
             if familiar == "yes":

@@ -4,7 +4,7 @@ import networkx as nx
 from matplotlib import pyplot as plt
 import random
 
-CURRICULUM = ["algebra1", "geometry", "algebra2", "precalculus", "calculus"]
+CURRICULUM = ["Algebra1", "Geometry", "Algebra2", "Precalculus", "Calculus"]
 SATISFICER_THRESHOLD = 0.85
 MAXIMIZER_THRESHOLD = 0.95
 
@@ -20,7 +20,7 @@ def main():
     print("On a scale from 1-10 (1: confusion, 10: clarity), enter your level of comfort for the following courses...")
     courses = []
     for course in CURRICULUM:
-        clarity_rating = int(input(course.capitalize() + ": "))
+        clarity_rating = int(input(course + ": "))
         while not (clarity_rating >= 1 and clarity_rating <= 10):
             clarity_rating = int(input("Please enter a valid rating (1-10): "))
         #Initialize learning rate - higher learning rate for supportive environments
@@ -35,33 +35,13 @@ def main():
     need_to_learn = get_courses_to_learn(courses, expert)
     
     #Begin Learning
-    learn(need_to_learn, days, expert)
+    duration = learn(need_to_learn, days, expert)
     
     #Output
-    #TODO: generate graph
-    for course in courses:
-        if course.score > SATISFICER_THRESHOLD:
-            print("MASTERED:", course.name.capitalize(), course.score)
     build_cell_assembly(courses)
-
-def build_cell_assembly(courses):
-    edges = []
-    for i in range(len(courses) - 2):
-        course = courses[i]
-        mastered_topics = int(course.score * 10)
-        for topic in TOPICS[course.name]:
-            counter = 1
-            if counter <= mastered_topics:
-                edges.append([topic, course])
-            counter += 1
-        following_course = courses[i + 1]
-        if course.score > SATISFICER_THRESHOLD and following_course.score > SATISFICER_THRESHOLD:
-            edges.append([course, following_course])
-    G = nx.Graph()
-    G.add_edges_from(edges)
-    nx.draw_networkx(G)
-    plt.show()
-
+    
+    print("\n"+ "SUMMARY...")
+    evaluation(duration, courses, expert, environment)
 
 def get_courses_to_learn(courses, expert):
     need_to_learn = []
@@ -86,13 +66,69 @@ def learn(courses_to_learn, iterations, expert):
         threshold = MAXIMIZER_THRESHOLD
     while day < iterations and pointer < len(courses_to_learn):
         current_course = courses_to_learn[pointer]
-        print("Day", str(day) + ":", current_course.name.capitalize())
+        print("Day", str(day) + ":", current_course.name)
         print("Learning rate:", current_course.learning_rate)
         current_course.score += (1-current_course.score) * current_course.learning_rate
         print("Progress:", str(round(current_course.score * 100, 2)) + "%")
         if current_course.score > threshold:
             pointer += 1
+            #Increase learning rate by 0.05 for next course if maximizer
+            if expert == "maximizer" and pointer < len(courses_to_learn):
+                courses_to_learn[pointer].learning_rate += 0.05
         day += 1
+    return day
+
+def build_cell_assembly(courses):
+    edges = []
+    for i in range(len(courses) - 2):
+        course = courses[i]
+        mastered_topics = int(course.score * 10)
+        for topic in TOPICS[course.name]:
+            counter = 1
+            if counter <= mastered_topics:
+                edges.append([topic, course])
+            counter += 1
+        following_course = courses[i + 1]
+        if course.score > SATISFICER_THRESHOLD and following_course.score > SATISFICER_THRESHOLD:
+            edges.append([course, following_course])
+    G = nx.Graph()
+    G.add_edges_from(edges)
+    nx.draw_networkx(G)
+    plt.show()
+    
+def evaluation(duration, courses, expert, environment):
+    if expert == "satisficer":
+        threshold = SATISFICER_THRESHOLD
+    else:
+        threshold = MAXIMIZER_THRESHOLD
+    
+    mastered = []
+    incomplete = []
+    for course in courses:
+        if course.score > threshold:
+            mastered.append(course.name)
+        else:
+            incomplete.append(course)
+    
+    print("MASTERED:", mastered)
+    
+    if (len(mastered) == len(courses)):
+        print("Calculus knowledge achieved in", duration, "days of learning as a " + expert + ".")
+    else:
+        print("Calculus still in progress under " + environment + " and " + expert + " environment conditions.")
+        #Predict number of days left to learn
+        learning_days_left = 0
+        pointer = 0
+        while pointer < len(incomplete):
+            course = incomplete[pointer]
+            course.score += (1-course.score) * course.learning_rate
+            if course.score >= threshold:
+                pointer += 1
+                #Increase learning rate by 0.05 for next course if maximizer
+                if expert == "maximizer" and pointer < len(incomplete):
+                    incomplete[pointer].learning_rate += 0.05
+            learning_days_left += 1
+        print("Completion of calculus is predicted to require ~" + str(learning_days_left) + " more days of learning.")
     
 if __name__ == "__main__":
     main()
