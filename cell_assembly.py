@@ -5,7 +5,8 @@ from matplotlib import pyplot as plt
 import random
 
 CURRICULUM = ["algebra1", "geometry", "algebra2", "precalculus", "calculus"]
-EXPERT_THRESHOLD = 0.85
+SATISFICER_THRESHOLD = 0.85
+MAXIMIZER_THRESHOLD = 0.95
 
 def main():
     #Gather user input
@@ -13,31 +14,34 @@ def main():
     environment = input("Is your learning environment supportive/unsupportive?: ")
     while not (environment == "supportive" or environment == "unsupportive"):
         environment = input("Please answer again (supportive/unsupportive): ")
+    expert = input("Are you a satisficer or maximizer?: ")
+    while not (expert == "satisficer" or expert == "maximizer"):
+        expert = input("Please answer again (satisficer/maximizer): ")
     print("On a scale from 1-10 (1: confusion, 10: clarity), enter your level of comfort for the following courses...")
     courses = []
     for course in CURRICULUM:
         clarity_rating = int(input(course.capitalize() + ": "))
         while not (clarity_rating >= 1 and clarity_rating <= 10):
             clarity_rating = int(input("Please enter a valid rating (1-10): "))
-        #Initalize learning rate - higher learning rate for supportive environments
+        #Initialize learning rate - higher learning rate for supportive environments
         if environment == "supportive":
             learning_rate = random.uniform(0.2, 0.3)
         else:
             learning_rate = random.uniform(0.05, 0.15)
-        course_obj = Course(course, clarity_rating, learning_rate)
+        course_obj = Course(course, clarity_rating, round(learning_rate, 2))
         courses.append(course_obj)
     
     #Evaluate current understanding
-    need_to_learn = get_courses_to_learn(courses)
+    need_to_learn = get_courses_to_learn(courses, expert)
     
     #Begin Learning
-    learn(need_to_learn, days)
+    learn(need_to_learn, days, expert)
     
     #Output
     #TODO: generate graph
     for course in courses:
-        if course.score > EXPERT_THRESHOLD:
-            print("MASTERED:", course.name, course.score)
+        if course.score > SATISFICER_THRESHOLD:
+            print("MASTERED:", course.name.capitalize(), course.score)
     build_cell_assembly(courses)
 
 def build_cell_assembly(courses):
@@ -49,9 +53,9 @@ def build_cell_assembly(courses):
             counter = 1
             if counter <= mastered_topics:
                 edges.append([topic, course])
-            counter+=1
+            counter += 1
         following_course = courses[i + 1]
-        if course.score > EXPERT_THRESHOLD and following_course.score > EXPERT_THRESHOLD:
+        if course.score > SATISFICER_THRESHOLD and following_course.score > SATISFICER_THRESHOLD:
             edges.append([course, following_course])
     G = nx.Graph()
     G.add_edges_from(edges)
@@ -59,26 +63,34 @@ def build_cell_assembly(courses):
     plt.show()
 
 
-def get_courses_to_learn(courses):
+def get_courses_to_learn(courses, expert):
     need_to_learn = []
     for course in courses:
         score = course.check_understanding()
-        #does not meet threshold to learn next topic
-        if score < EXPERT_THRESHOLD:
-            need_to_learn.append(course)
+        if (expert == "satisficer"):
+            #does not meet threshold to learn next topic
+            if score < SATISFICER_THRESHOLD:
+                need_to_learn.append(course)
+        else:
+            #must learn everything to learn next topic
+            if score < MAXIMIZER_THRESHOLD:
+                need_to_learn.append(course)
     return need_to_learn
 
-def learn(courses_to_learn, iterations):
+def learn(courses_to_learn, iterations, expert):
     pointer = 0
     day = 0
+    if expert == "satisficer":
+        threshold = SATISFICER_THRESHOLD
+    else:
+        threshold = MAXIMIZER_THRESHOLD
     while day < iterations and pointer < len(courses_to_learn):
-        print("Day ", day)
         current_course = courses_to_learn[pointer]
-        print("Learning", current_course.name)
-        print("learning rate:", current_course.learning_rate)
+        print("Day", str(day) + ":", current_course.name.capitalize())
+        print("Learning rate:", current_course.learning_rate)
         current_course.score += (1-current_course.score) * current_course.learning_rate
-        print("Score:", current_course.score)
-        if current_course.score > EXPERT_THRESHOLD:
+        print("Progress:", str(round(current_course.score * 100, 2)) + "%")
+        if current_course.score > threshold:
             pointer += 1
         day += 1
     

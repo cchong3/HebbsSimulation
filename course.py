@@ -25,16 +25,17 @@ TOPICS = {
 class Course():
     
     def __init__(self, name, rating, learning_rate):
-        self.name = name
-        self.rating = rating
+        self.name = name.capitalize()
+        self.rating = rating/10
         self.learning_rate = learning_rate
         self.adjust_learning_rate()
+        print(self.learning_rate)
         self.score = 0
     
     def adjust_learning_rate(self):
         #Only existing confusion reduces learning rate
         if self.rating < 0.4:
-            self.learning_rate *= 0.95
+            self.learning_rate = round(self.learning_rate * 0.95, 3)
             
     def check_understanding(self):
         print("Enter yes/no if you understand the following topics...")
