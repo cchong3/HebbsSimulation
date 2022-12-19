@@ -1,4 +1,7 @@
 from course import Course
+from course import TOPICS
+import networkx as nx
+from matplotlib import pyplot as plt
 import random
 
 CURRICULUM = ["algebra1", "geometry", "algebra2", "precalculus", "calculus"]
@@ -35,6 +38,26 @@ def main():
     for course in courses:
         if course.score > EXPERT_THRESHOLD:
             print("MASTERED:", course.name, course.score)
+    build_cell_assembly(courses)
+
+def build_cell_assembly(courses):
+    edges = []
+    for i in range(len(courses) - 2):
+        course = courses[i]
+        mastered_topics = int(course.score * 10)
+        for topic in TOPICS[course.name]:
+            counter = 1
+            if counter <= mastered_topics:
+                edges.append([topic, course])
+            counter+=1
+        following_course = courses[i + 1]
+        if course.score > EXPERT_THRESHOLD and following_course.score > EXPERT_THRESHOLD:
+            edges.append([course, following_course])
+    G = nx.Graph()
+    G.add_edges_from(edges)
+    nx.draw_networkx(G)
+    plt.show()
+
 
 def get_courses_to_learn(courses):
     need_to_learn = []

@@ -37,7 +37,7 @@ class Course():
             self.learning_rate *= 0.95
             
     def check_understanding(self):
-        print("Enter yes/no if you understand the following " + self.name + " topics...")
+        print("Enter yes/no if you understand the following topics...")
         count = 0
         for topic in TOPICS[self.name]:
             familiar = input(topic.capitalize() + ": ")
@@ -48,3 +48,6 @@ class Course():
         self.score = round(count / len(TOPICS[self.name]), 2)
         print("Topic understanding score:", self.score)
         return self.score
+
+    def __str__(self):
+        return self.name
